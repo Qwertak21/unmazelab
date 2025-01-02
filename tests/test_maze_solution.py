@@ -35,3 +35,16 @@ def test_load_solver_output_frame():
     ms = MazeSolution("1000\n1\n2\n3\n4\n")
     assert ms.solving_time_us == 1000
     assert (ms.path == np.array([[1, 2], [3, 4]])).all()
+
+def test_load_solver_output_frame_with_extra_whitespace_characters():
+    ms = MazeSolution("\n \n 1000 \n \n 1 \n \n 2 \n\n 3 \n\n 4 \n\n")
+    assert ms.solving_time_us == 1000
+    assert (ms.path == np.array([[1, 2], [3, 4]])).all()
+
+def test_load_solver_output_frame_with_incorrect_length():
+    with pytest.raises(ValueError, match="Incorrect length of output frame from solver"):
+        ms = MazeSolution("1000\n1\n2\n3")
+
+def test_load_solver_output_frame_with_non_numeric_characters():
+    with pytest.raises(ValueError, match="Output frame from solver contain non numeric characters"):
+        ms = MazeSolution("1000\n1a\n2b\n3c\n4")
