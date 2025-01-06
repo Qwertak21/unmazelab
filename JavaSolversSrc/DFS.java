@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -57,13 +58,14 @@ public class DFS {
         try {
             Scanner scanner = new Scanner(System.in);
 
-            int rows = Integer.parseInt(scanner.nextLine());
-            int cols = Integer.parseInt(scanner.nextLine());
-            int startX = Integer.parseInt(scanner.nextLine());
-            int startY = Integer.parseInt(scanner.nextLine());
-            int endX = Integer.parseInt(scanner.nextLine());
+            int rows = Integer.parseInt(scanner.nextLine()); // Ilość wierszy labiryntu
+            int cols = Integer.parseInt(scanner.nextLine()); // Ilość kolumn labiryntu
+            int startX = Integer.parseInt(scanner.nextLine()); // Wiersz startowy
+            int startY = Integer.parseInt(scanner.nextLine()); // Kolumna startowa
+            int endX = Integer.parseInt(scanner.nextLine());   // Wiersz końcowy
             int endY = Integer.parseInt(scanner.nextLine());
 
+            // Ściany pionowe (między komórkami w kolumnach)
             int[][] verticalWalls = new int[rows][cols-1];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols-1; j++) {
@@ -71,6 +73,7 @@ public class DFS {
                 }
             }
 
+            // Ściany poziome (między komórkami w wierszach)
             int[][] horizontalWalls = new int[rows - 1][cols];
             for (int i = 0; i < rows-1; i++) {
                 for (int j = 0; j < cols; j++) {
@@ -79,19 +82,34 @@ public class DFS {
             }
             scanner.close();
 
-            long startTime = System.nanoTime();
-            List<int[]> path = findShortestPath(verticalWalls, horizontalWalls, rows, cols, startX, startY, endX, endY);
-            long endTime = System.nanoTime();
-            long durationMicroseconds = (endTime - startTime) / 1000;
+            List<int[]> path = new ArrayList<>();
+            List<Long> Time = new ArrayList<>();
+            long lastDurationMicroseconds = 0;
+
+            for (int i = 0; i < 20; i++) {
+                long startTime = System.nanoTime();
+                path = findShortestPath(verticalWalls, horizontalWalls, rows, cols, startX, startY, endX, endY);
+                long endTime = System.nanoTime();
+                lastDurationMicroseconds = (endTime - startTime) / 1000;
+                Time.add(lastDurationMicroseconds);
+            }
+
+            long avgTime = 0;
+
+            for (int i = 10; i < 20; i++) {
+                avgTime += Time.get(i);
+            }
+            avgTime /= 10;
 
             if (!path.isEmpty()){
-                System.out.println(durationMicroseconds);
+                System.out.println(avgTime);
 
                 for (int[] cell : path) {
                     System.out.println(cell[0]);
                     System.out.println(cell[1]);
                 }
             }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

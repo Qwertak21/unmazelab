@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 import java.util.*;
 
 public class Tremaux {public static List<int[]> findPathTremaux(int[][] verticalWalls, int[][] horizontalWalls, int rows, int cols, int startX, int startY, int endX, int endY) {
@@ -99,19 +100,34 @@ public class Tremaux {public static List<int[]> findPathTremaux(int[][] vertical
             }
             scanner.close();
 
-            long startTime = System.nanoTime();
-            List<int[]> path = findPathTremaux(verticalWalls, horizontalWalls, rows, cols, startX, startY, endX, endY);
-            long endTime = System.nanoTime();
-            long durationMicroseconds = (endTime - startTime) / 1000;
+            List<int[]> path = new ArrayList<>();
+            List<Long> Time = new ArrayList<>();
+            long lastDurationMicroseconds = 0;
+
+            for (int i = 0; i < 20; i++) {
+                long startTime = System.nanoTime();
+                path = findPathTremaux(verticalWalls, horizontalWalls, rows, cols, startX, startY, endX, endY);
+                long endTime = System.nanoTime();
+                lastDurationMicroseconds = (endTime - startTime) / 1000;
+                Time.add(lastDurationMicroseconds);
+            }
+
+            long avgTime = 0;
+
+            for (int i = 10; i < 20; i++) {
+                avgTime += Time.get(i);
+            }
+            avgTime /= 10;
 
             if (!path.isEmpty()){
-                System.out.println(durationMicroseconds);
+                System.out.println(avgTime);
 
                 for (int[] cell : path) {
                     System.out.println(cell[0]);
                     System.out.println(cell[1]);
                 }
             }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
